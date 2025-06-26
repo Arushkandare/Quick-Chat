@@ -37,14 +37,21 @@ app.use('/api/auth', userRoutes);
 app.use('/api/messages', messageRoutes);
 
 (async () => {
-    try {
-        await connectDB();
-        const PORT = process.env.PORT;
-        server.listen(PORT, () => {
-            console.log("Server is running on PORT:", PORT);
-        });
-    } catch (err) {
-        console.error("Failed to start server:", err);
-        process.exit(1);
-    }
+    await connectDB();
 })();
+
+if(process.env.NODE_ENV !== "production") {
+    (async () => {
+        try {
+            const PORT = process.env.PORT;
+            server.listen(PORT, () => {
+                console.log("Server is running on PORT:", PORT);
+            });
+        } catch (err) {
+            console.error("Failed to start server:", err);
+            process.exit(1);
+        }
+    })();
+}
+
+export default server;
